@@ -17,12 +17,17 @@ class Pong:
         pygame.init()
         self.screen = pygame.display.set_mode((ANCHO, ALTO))
         self.title = pygame.display.set_caption("Pong")
+        self.icon_imagen = pygame.image.load("icono.png")
+        self.logo = pygame.display.set_icon(self.icon_imagen)
 
     def jugar(self):  # Contiene el bucle principal
         pos_alto_inicial = (ALTO / 2) - (ALTO_PALA / 2)
         centro_vectores_pelota = (ANCHO / 2, ALTO / 2)
         radio_pelota = 10
         ancho_linea_media = 5
+        punto_jugador1 = 0
+        punto_jugador2 = 0
+        fuente_marcador = pygame.font.SysFont("Arial", 40)
         exit = False
 
         while not exit:
@@ -56,6 +61,14 @@ class Pong:
             )
 
             # Marcador
+            texto_marcador1 = fuente_marcador.render(
+                "Jugador 1: " + str(punto_jugador1), 0, COLOR_OBJETOS
+            )
+            texto_marcador2 = fuente_marcador.render(
+                "Jugador 2: " + str(punto_jugador2), 0, COLOR_OBJETOS
+            )
+            self.screen.blit(texto_marcador1, (20, 20))
+            self.screen.blit(texto_marcador2, (((ANCHO / 2) + 20), 20))
 
             # Mostrar los cambios en la pantalla
             pygame.display.flip()
