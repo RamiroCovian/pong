@@ -1,13 +1,15 @@
+from random import randint
 import pygame
 
-ANCHO = 800
-ALTO = 600
+ANCHO = 1080
+ALTO = 820
 COLOR_OBJETOS = (255, 255, 255)
 COLOR_FONDO = (100, 100, 100)
 ANCHO_PALA = 20
 ALTO_PALA = 60
 MARGEN_X = 10
 TAM_PELOTA = 20
+VEL_MAXIMA = 1
 
 
 class Jugador:
@@ -18,10 +20,9 @@ class Jugador:
         pygame.draw.rect(pantalla, COLOR_OBJETOS, self.rectangulo)
 
 
-class Pelota:
+class Pelota(pygame.Rect):
     def __init__(self):
-        # Definicion del rectangulo
-        self.rectangulo = pygame.Rect(
+        super(Pelota, self).__init__(
             (
                 ((ANCHO - TAM_PELOTA) / 2),
                 ((ALTO - TAM_PELOTA) / 2),
@@ -29,10 +30,46 @@ class Pelota:
                 TAM_PELOTA,
             )
         )
+        # Definicion del rectangulo
+        self.velocidad_y = randint(-VEL_MAXIMA, VEL_MAXIMA)
+
+        # validas = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]
+        # self.velocidad_x = validas[randint(0, len(validas)-1)]
+
+        self.velocidad_x = 0
+        while self.velocidad_x == 0:
+            self.velocidad_x = randint(-VEL_MAXIMA, VEL_MAXIMA)
 
     def pintame(self, pantalla):
         # Pintar el rectangulo
-        pygame.draw.rect(pantalla, COLOR_OBJETOS, self.rectangulo)
+        pygame.draw.rect(pantalla, COLOR_OBJETOS, self)
+
+    def mover(self):
+        # Direccion: incrementeo x, incremento y --> velocidad_x , velocidad_y
+        # Posicion actual (x, y)
+        self.x = self.x + self.velocidad_x
+        self.y = self.y + self.velocidad_y
+
+    def rebotar(self):
+        if self.y <= 0:
+            self.y = 0
+            self.velocidad_y = -self.velocidad_y
+
+        if self.y >= ALTO - TAM_PELOTA:
+            self.y = ALTO - TAM_PELOTA
+            self.velocidad_y = -self.velocidad_y
+
+    def comprobar_punto(self):
+        # comprobar si la pelota ha salido por uno de los extremos laterales
+        # si ha salido:
+        #    - sie es por la derecha, (suma punto para jugador 1) --- devolver 1
+        #    - si esd por la izquierda, (suma punto para jugador 2) --- devolver  0
+        #    - volver a situar la pelota en el centro
+        #    - lanzarla hacia el perdedor
+        # si no ha salido:
+        #    - devolver '
+
+        pass
 
 
 class Pong:
@@ -64,6 +101,8 @@ class Pong:
             self.pintar_red()
             self.jugador1.pintame(self.screen)
             self.jugador2.pintame(self.screen)
+            self.pelota.mover()
+            self.pelota.rebotar()
             self.pelota.pintame(self.screen)
 
             # Marcador
