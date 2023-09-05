@@ -71,8 +71,6 @@ class Pelota(pygame.Rect):
         # Posicion actual (x, y)
         self.x = self.x + self.velocidad_x
         self.y = self.y + self.velocidad_y
-
-    def rebotar(self):
         if self.y <= 0:
             self.y = 0
             self.velocidad_y = -self.velocidad_y
@@ -80,6 +78,9 @@ class Pelota(pygame.Rect):
         if self.y >= ALTO - TAM_PELOTA:
             self.y = ALTO - TAM_PELOTA
             self.velocidad_y = -self.velocidad_y
+
+    def rebotar(self):
+        pass
 
     def comprobar_punto(self):
         # comprobar si la pelota ha salido por uno de los extremos laterales
@@ -122,34 +123,17 @@ class Pong:
                     exit = True
 
             # Doy movimiento al jugadoor
-            estado_teclas = pygame.key.get_pressed()
-            if estado_teclas[pygame.K_a]:
-                self.jugador1.mover(True)
-            if estado_teclas[pygame.K_z]:
-                self.jugador1.mover(False)
-            if estado_teclas[pygame.K_UP]:
-                self.jugador2.mover(True)
-            if estado_teclas[pygame.K_DOWN]:
-                self.jugador2.mover(False)
+            self.comprobar_teclas()
 
             # Bloque 2: Renderizar nuestro objeto
-            pygame.draw.rect(self.screen, COLOR_FONDO, ((0, 0), (ANCHO, ALTO)))
-            pygame.draw.line(
-                self.screen, (0, 0, 255), (0, ALTO_PALA), (ANCHO, ALTO_PALA)
-            )
-            pygame.draw.line(
-                self.screen,
-                (0, 0, 255),
-                (0, ALTO - ALTO_PALA),
-                (ANCHO, ALTO - ALTO_PALA),
-            )
+            # pygame.draw.rect(self.screen, COLOR_FONDO, ((0, 0), (ANCHO, ALTO)))
+            self.screen.fill(COLOR_FONDO)
 
             self.pintar_red()
             self.jugador1.pintame(self.screen)
             self.jugador2.pintame(self.screen)
-            self.pelota.mover()
-            self.pelota.rebotar()
-            self.pelota.pintame(self.screen)
+
+            self.pintar_pelota()
 
             # Marcador
             texto_marcador1 = fuente_marcador.render(
@@ -166,6 +150,23 @@ class Pong:
             self.reloj.tick(FPS)
 
         pygame.quit()
+
+    def comprobar_teclas(self):
+        estado_teclas = pygame.key.get_pressed()
+        if estado_teclas[pygame.K_a]:
+            self.jugador1.mover(True)
+        if estado_teclas[pygame.K_z]:
+            self.jugador1.mover(False)
+        if estado_teclas[pygame.K_UP]:
+            self.jugador2.mover(True)
+        if estado_teclas[pygame.K_DOWN]:
+            self.jugador2.mover(False)
+
+    def pintar_pelota(self):
+        self.pelota.mover()
+        # Comprobamos si hay rebote en las paletas
+        self.pelota.rebotar()
+        self.pelota.pintame(self.screen)
 
     def pintar_red(self):
         tramo_pintado = 40
