@@ -110,6 +110,16 @@ class Pelota(pygame.Rect):
         return 0
 
 
+class Marcador:
+    """
+    Necesita:
+        - Guardar la puntuacion del jugador1
+        - Guardar la puntuacion del jugador 2
+        - Metodo para poner a cero
+        - Metodo para mostrarse en pantalla
+    """
+
+
 class Pong:
     def __init__(self):
         pygame.init()
@@ -149,7 +159,7 @@ class Pong:
             self.jugador2.pintame(self.screen)
 
             self.pintar_pelota()
-            self.pelota.comprobar_punto()
+            hay_punto = self.pelota.comprobar_punto()
 
             # Marcador
             texto_marcador1 = fuente_marcador.render(
