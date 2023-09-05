@@ -83,9 +83,6 @@ class Pelota(pygame.Rect):
             self.y = ALTO - TAM_PELOTA
             self.velocidad_y = -self.velocidad_y
 
-    def rebotar(self):
-        pass
-
     def comprobar_punto(self):
         # comprobar si la pelota ha salido por uno de los extremos laterales
         # si ha salido:
@@ -96,7 +93,21 @@ class Pelota(pygame.Rect):
         # si no ha salido:
         #    - devolver '
 
-        pass
+        # Sse sale por la izquierda
+        if self.right <= 0:
+            print("Punto para el jugador 2")
+            self.center = (ANCHO / 2, ALTO / 2)
+            self.velocidad_y = randint(-VEL_MAXIMA, VEL_MAXIMA)
+            self.velocidad_x = randint(-VEL_MAXIMA, -1)
+            return 2
+        # se sale por la derecha
+        if self.left >= ANCHO:
+            print("Punto para el jugador 1")
+            self.center = (ANCHO / 2, ALTO / 2)
+            self.velocidad_y = randint(-VEL_MAXIMA, VEL_MAXIMA)
+            self.velocidad_x = randint(1, VEL_MAXIMA)
+            return 1
+        return 0
 
 
 class Pong:
@@ -138,6 +149,7 @@ class Pong:
             self.jugador2.pintame(self.screen)
 
             self.pintar_pelota()
+            self.pelota.comprobar_punto()
 
             # Marcador
             texto_marcador1 = fuente_marcador.render(
@@ -189,7 +201,6 @@ class Pong:
             self.pelota.velocidad_x = randint(-VEL_MAXIMA, -1)
             self.pelota.velocidad_y = randint(-VEL_MAXIMA, VEL_MAXIMA)
 
-        self.pelota.rebotar()
         self.pelota.pintame(self.screen)
 
     def pintar_red(self):
