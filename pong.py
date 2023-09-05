@@ -13,6 +13,7 @@ VEL_MAXIMA = 1
 VEL_JUGADOR = 2
 ARRIBA = True
 ABAJO = False
+FPS = 60
 
 
 class Jugador(pygame.Rect):
@@ -97,6 +98,7 @@ class Pong:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((ANCHO, ALTO))
+        self.reloj = pygame.time.Clock()
         self.title = pygame.display.set_caption("Pong")
         self.icon_imagen = pygame.image.load("icono.png")
         self.logo = pygame.display.set_icon(self.icon_imagen)
@@ -161,6 +163,7 @@ class Pong:
 
             # Bloque 3: Mostrar los cambios en la pantalla
             pygame.display.flip()
+            self.reloj.tick(FPS)
 
         pygame.quit()
 
