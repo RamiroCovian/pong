@@ -2,7 +2,7 @@ from random import randint
 import pygame
 
 ANCHO = 1080
-ALTO = 820
+ALTO = 720
 COLOR_OBJETOS = (255, 255, 255)
 COLOR_FONDO = (100, 100, 100)
 ANCHO_PALA = 20
@@ -11,6 +11,8 @@ MARGEN_X = 10
 TAM_PELOTA = 20
 VEL_MAXIMA = 1
 VEL_JUGADOR = 2
+ARRIBA = True
+ABAJO = False
 
 
 class Jugador(pygame.Rect):
@@ -19,6 +21,24 @@ class Jugador(pygame.Rect):
 
     def pintame(self, pantalla):
         pygame.draw.rect(pantalla, COLOR_OBJETOS, self)
+
+    def mover(self, direccion):
+        """
+        Que necesito para que un jugador se mueva:
+        - Posicion: nos basta con la y ---> self.y
+        - Velocidad: es una constante global ---> VEL_JUGADOR
+        - Direccion: argumento del metodo ---> True: arriba, False: abajo
+        """
+        if direccion == ARRIBA:
+            if self.y <= 0:
+                self.y = 0
+            else:
+                self.y -= VEL_JUGADOR
+        if direccion == ABAJO:
+            if self.y >= (ALTO - ALTO_PALA):
+                self.y = ALTO - ALTO_PALA
+            else:
+                self.y += VEL_JUGADOR
 
 
 class Pelota(pygame.Rect):
@@ -98,28 +118,29 @@ class Pong:
                     event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE
                 ):  # QUIT es una constante de pygame
                     exit = True
-                # if event.type == pygame.KEYDOWN:
-                #     if event.key == pygame.K_a:
-                #         self.jugador1.y -= 10
-                #     if event.key == pygame.K_z:
-                #         self.jugador1.y += 10
-                #     if event.key == pygame.K_UP:
-                #         self.jugador2.y -= 10
-                #     if event.key == pygame.K_DOWN:
-                #         self.jugador2.y += 10
 
+            # Doy movimiento al jugadoor
             estado_teclas = pygame.key.get_pressed()
             if estado_teclas[pygame.K_a]:
-                self.jugador1.y -= VEL_JUGADOR
+                self.jugador1.mover(True)
             if estado_teclas[pygame.K_z]:
-                self.jugador1.y += VEL_JUGADOR
+                self.jugador1.mover(False)
             if estado_teclas[pygame.K_UP]:
-                self.jugador2.y -= VEL_JUGADOR
+                self.jugador2.mover(True)
             if estado_teclas[pygame.K_DOWN]:
-                self.jugador2.y += VEL_JUGADOR
+                self.jugador2.mover(False)
 
             # Bloque 2: Renderizar nuestro objeto
             pygame.draw.rect(self.screen, COLOR_FONDO, ((0, 0), (ANCHO, ALTO)))
+            pygame.draw.line(
+                self.screen, (0, 0, 255), (0, ALTO_PALA), (ANCHO, ALTO_PALA)
+            )
+            pygame.draw.line(
+                self.screen,
+                (0, 0, 255),
+                (0, ALTO - ALTO_PALA),
+                (ANCHO, ALTO - ALTO_PALA),
+            )
 
             self.pintar_red()
             self.jugador1.pintame(self.screen)
