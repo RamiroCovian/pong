@@ -12,12 +12,12 @@ TAM_PELOTA = 20
 VEL_MAXIMA = 1
 
 
-class Jugador:
+class Jugador(pygame.Rect):
     def __init__(self, x, y):
-        self.rectangulo = pygame.Rect(x, y, ANCHO_PALA, ALTO_PALA)
+        super(Pelota, self).__init__(x, y, ANCHO_PALA, ALTO_PALA)
 
     def pintame(self, pantalla):
-        pygame.draw.rect(pantalla, COLOR_OBJETOS, self.rectangulo)
+        pygame.draw.rect(pantalla, COLOR_OBJETOS, self)
 
 
 class Pelota(pygame.Rect):
@@ -90,12 +90,15 @@ class Pong:
         fuente_marcador = pygame.font.SysFont("Arial", 40)
         exit = False
 
+        # Bloque 1: Captura de eventos
         while not exit:
             for event in pygame.event.get():  # Lista de eventos con objeto
-                if event.type == pygame.QUIT:  # QUIT es una constante de pygame
+                if event.type == pygame.QUIT or (
+                    event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE
+                ):  # QUIT es una constante de pygame
                     exit = True
 
-            # Renderizar nuestro objeto
+            # Bloque 2: Renderizar nuestro objeto
             pygame.draw.rect(self.screen, COLOR_FONDO, ((0, 0), (ANCHO, ALTO)))
 
             self.pintar_red()
@@ -115,7 +118,7 @@ class Pong:
             self.screen.blit(texto_marcador1, (20, 20))
             self.screen.blit(texto_marcador2, (((ANCHO / 2) + 20), 20))
 
-            # Mostrar los cambios en la pantalla
+            # Bloque 3: Mostrar los cambios en la pantalla
             pygame.display.flip()
 
         pygame.quit()
