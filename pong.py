@@ -10,11 +10,12 @@ ALTO_PALA = 60
 MARGEN_X = 10
 TAM_PELOTA = 20
 VEL_MAXIMA = 1
+VEL_JUGADOR = 2
 
 
 class Jugador(pygame.Rect):
     def __init__(self, x, y):
-        super(Pelota, self).__init__(x, y, ANCHO_PALA, ALTO_PALA)
+        super(Jugador, self).__init__(x, y, ANCHO_PALA, ALTO_PALA)
 
     def pintame(self, pantalla):
         pygame.draw.rect(pantalla, COLOR_OBJETOS, self)
@@ -97,6 +98,25 @@ class Pong:
                     event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE
                 ):  # QUIT es una constante de pygame
                     exit = True
+                # if event.type == pygame.KEYDOWN:
+                #     if event.key == pygame.K_a:
+                #         self.jugador1.y -= 10
+                #     if event.key == pygame.K_z:
+                #         self.jugador1.y += 10
+                #     if event.key == pygame.K_UP:
+                #         self.jugador2.y -= 10
+                #     if event.key == pygame.K_DOWN:
+                #         self.jugador2.y += 10
+
+            estado_teclas = pygame.key.get_pressed()
+            if estado_teclas[pygame.K_a]:
+                self.jugador1.y -= VEL_JUGADOR
+            if estado_teclas[pygame.K_z]:
+                self.jugador1.y += VEL_JUGADOR
+            if estado_teclas[pygame.K_UP]:
+                self.jugador2.y -= VEL_JUGADOR
+            if estado_teclas[pygame.K_DOWN]:
+                self.jugador2.y += VEL_JUGADOR
 
             # Bloque 2: Renderizar nuestro objeto
             pygame.draw.rect(self.screen, COLOR_FONDO, ((0, 0), (ANCHO, ALTO)))
