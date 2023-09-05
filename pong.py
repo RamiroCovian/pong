@@ -3,17 +3,21 @@ import pygame
 
 ANCHO = 1080
 ALTO = 720
+FPS = 60
+
 COLOR_OBJETOS = (255, 255, 255)
 COLOR_FONDO = (100, 100, 100)
+
 ANCHO_PALA = 20
 ALTO_PALA = 60
-MARGEN_X = 10
-TAM_PELOTA = 20
-VEL_MAXIMA = 1
-VEL_JUGADOR = 2
+VEL_JUGADOR = 10
 ARRIBA = True
 ABAJO = False
-FPS = 60
+
+MARGEN_X = 10
+TAM_PELOTA = 20
+VEL_MAXIMA = 10
+VARIACION_VEL_PELOTA = 5
 
 
 class Jugador(pygame.Rect):
@@ -164,7 +168,27 @@ class Pong:
 
     def pintar_pelota(self):
         self.pelota.mover()
-        # Comprobamos si hay rebote en las paletas
+        # Comprobamos si hay rebote en las paletas (colliderect)
+        # if self.pelota.colliderect(self.jugador1) or self.pelota.colliderect(
+        #     self.jugador2
+        # ):
+        #     self.pelota.velocidad_x = -self.pelota.velocidad_x + randint(
+        #         -VARIACION_VEL_PELOTA, VARIACION_VEL_PELOTA
+        #     )
+        #     self.pelota.velocidad_y = randint(-VEL_MAXIMA, VEL_MAXIMA)
+        #     if self.pelota.velocidad_x < -VEL_MAXIMA:
+        #         self.pelota.velocidad_x = -VEL_MAXIMA
+        #     if self.pelota.velocidad_x > VEL_MAXIMA:
+        #         self.pelota.velocidad_x = VEL_MAXIMA
+
+        # ALTERNATIVA
+        if self.pelota.colliderect(self.jugador1):
+            self.pelota.velocidad_x = randint(1, VEL_MAXIMA)
+            self.pelota.velocidad_y = randint(-VEL_MAXIMA, VEL_MAXIMA)
+        if self.pelota.colliderect(self.jugador2):
+            self.pelota.velocidad_x = randint(-VEL_MAXIMA, -1)
+            self.pelota.velocidad_y = randint(-VEL_MAXIMA, VEL_MAXIMA)
+
         self.pelota.rebotar()
         self.pelota.pintame(self.screen)
 
