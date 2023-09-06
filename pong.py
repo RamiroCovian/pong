@@ -178,11 +178,9 @@ class Pong:
             self.jugador2.pintame(self.screen)
 
             self.pintar_pelota()
-            hay_punto = self.pelota.comprobar_punto()
-            if hay_punto == 1:
-                puntaje_jugador1 += 1
-            if hay_punto == 2:
-                puntaje_jugador2 += 1
+            puntaje_jugador1, puntaje_jugador2 = self.sumar_puntos(
+                puntaje_jugador1, puntaje_jugador2
+            )
 
             self.marcador_jugador1.pintarse(
                 self.screen, str(puntaje_jugador1), POS_X_MARCADOR1, POS_Y_MARCADORES
@@ -196,6 +194,21 @@ class Pong:
             self.reloj.tick(FPS)
 
         pygame.quit()
+
+    def sumar_puntos(self, puntaje_jugador1, puntaje_jugador2):
+        hay_punto = self.pelota.comprobar_punto()
+
+        if hay_punto == 1:
+            if puntaje_jugador1 != 8:
+                puntaje_jugador1 += 1
+            else:
+                puntaje_jugador1 = "El ganador es Jugador 1"
+        if hay_punto == 2:
+            if puntaje_jugador2 != 8:
+                puntaje_jugador2 += 1
+            else:
+                puntaje_jugador2 = "El ganador es Jugador 2"
+        return puntaje_jugador1, puntaje_jugador2
 
     def comprobar_teclas(self):
         estado_teclas = pygame.key.get_pressed()
