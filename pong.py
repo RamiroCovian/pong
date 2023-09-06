@@ -19,6 +19,11 @@ TAM_PELOTA = 20
 VEL_MAXIMA = 10
 VARIACION_VEL_PELOTA = 5
 
+TAM_LETRA_MARCADOR = 40
+POS_X_MARCADOR1 = ANCHO / 4
+POS_X_MARCADOR2 = ANCHO - (ANCHO / 4)
+POS_Y_MARCADORES = ALTO / 4
+
 
 class Jugador(pygame.Rect):
     def __init__(self, x, y):
@@ -93,14 +98,14 @@ class Pelota(pygame.Rect):
         # si no ha salido:
         #    - devolver '
 
-        # Sse sale por la izquierda
+        # Se sale por la izquierda
         if self.right <= 0:
             print("Punto para el jugador 2")
             self.center = (ANCHO / 2, ALTO / 2)
             self.velocidad_y = randint(-VEL_MAXIMA, VEL_MAXIMA)
             self.velocidad_x = randint(-VEL_MAXIMA, -1)
             return 2
-        # se sale por la derecha
+        # Se sale por la derecha
         if self.left >= ANCHO:
             print("Punto para el jugador 1")
             self.center = (ANCHO / 2, ALTO / 2)
@@ -110,7 +115,7 @@ class Pelota(pygame.Rect):
         return 0
 
 
-class Marcador:
+class Marcador(pygame.Rect):
     """
     Necesita:
         - Guardar la puntuacion del jugador1
@@ -118,6 +123,19 @@ class Marcador:
         - Metodo para poner a cero
         - Metodo para mostrarse en pantalla
     """
+
+    def __init__(self):
+        pass
+
+    def reiniciar_marcador(self):
+        pass
+
+    def pintarse(self, pantalla, texto, x, y):
+        self.fuente_marcador = pygame.font.SysFont("Arial", TAM_LETRA_MARCADOR)
+        self.superficie = self.fuente_marcador.render(texto, True, COLOR_OBJETOS)
+        self.rectangulo = self.superficie.get_rect()
+        self.rectangulo.center = (x, y)
+        pantalla.blit(self.superficie, self.rectangulo)
 
 
 class Pong:
@@ -132,12 +150,13 @@ class Pong:
         self.pelota = Pelota()
         self.jugador1 = Jugador(MARGEN_X, pos_y)
         self.jugador2 = Jugador(ANCHO - MARGEN_X - ANCHO_PALA, pos_y)
+        self.marcador_jugador1 = Marcador()
+        self.marcador_jugador2 = Marcador()
 
     def jugar(self):  # Contiene el bucle principal
-        punto_jugador1 = 0
-        punto_jugador2 = 0
-        fuente_marcador = pygame.font.SysFont("Arial", 40)
         exit = False
+        puntaje_jugador1 = 0
+        puntaje_jugador2 = 0
 
         # Bloque 1: Captura de eventos
         while not exit:
@@ -160,16 +179,17 @@ class Pong:
 
             self.pintar_pelota()
             hay_punto = self.pelota.comprobar_punto()
+            if hay_punto == 1:
+                puntaje_jugador1 += 1
+            if hay_punto == 2:
+                puntaje_jugador2 += 1
 
-            # Marcador
-            texto_marcador1 = fuente_marcador.render(
-                "Jugador 1: " + str(punto_jugador1), 0, COLOR_OBJETOS
+            self.marcador_jugador1.pintarse(
+                self.screen, str(puntaje_jugador1), POS_X_MARCADOR1, POS_Y_MARCADORES
             )
-            texto_marcador2 = fuente_marcador.render(
-                "Jugador 2: " + str(punto_jugador2), 0, COLOR_OBJETOS
+            self.marcador_jugador2.pintarse(
+                self.screen, str(puntaje_jugador2), POS_X_MARCADOR2, POS_Y_MARCADORES
             )
-            self.screen.blit(texto_marcador1, (20, 20))
-            self.screen.blit(texto_marcador2, (((ANCHO / 2) + 20), 20))
 
             # Bloque 3: Mostrar los cambios en la pantalla
             pygame.display.flip()
