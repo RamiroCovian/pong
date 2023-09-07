@@ -223,11 +223,7 @@ class Pong:
                 # 1- Parar la partida. La pelota se queda quieta (o no vuelve a salir)
                 # 2- (Opcional) Impedir el movimiento de los jugadores
                 # 3- Pintar en la pantalla quien es el ganador
-                mensaje = f"Ha ganado el jugador {hay_ganador}"
-                text_img = self.tipografia.render(mensaje, False, COLOR_OBJETOS)
-                x = ANCHO / 2 - text_img.get_width() / 2
-                y = ALTO / 2 - text_img.get_height() / 2
-                self.screen.blit(text_img, (x, y))
+                self.finalizar_partida(hay_ganador)
             # 4- Preguntar si queremos jugar de nuevo
             else:
                 # Doy movimiento al jugadoor
@@ -245,6 +241,13 @@ class Pong:
             self.reloj.tick(FPS)
 
         pygame.quit()
+
+    def finalizar_partida(self, hay_ganador):
+        mensaje = f"Ha ganado el jugador {hay_ganador}"
+        text_img = self.tipografia.render(mensaje, False, COLOR_OBJETOS)
+        x = ANCHO / 2 - text_img.get_width() / 2
+        y = ALTO / 2 - text_img.get_height() / 2
+        self.screen.blit(text_img, (x, y))
 
     def comprobar_teclas(self):
         estado_teclas = pygame.key.get_pressed()
