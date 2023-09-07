@@ -19,7 +19,7 @@ TAM_PELOTA = 20
 VEL_MAXIMA = 10
 VARIACION_VEL_PELOTA = 5
 
-TAM_LETRA_MARCADOR = 40
+TAM_LETRA_MARCADOR = 70
 POS_X_MARCADOR1 = ANCHO / 4
 POS_X_MARCADOR2 = ANCHO - (ANCHO / 4)
 POS_Y_MARCADORES = ALTO / 4
@@ -126,6 +126,8 @@ class Marcador(pygame.Rect):
 
     def __init__(self):
         self.reset()
+        # Definir la tipografia
+        self.tipografia = pygame.font.SysFont("Arial", TAM_LETRA_MARCADOR)
 
     def incrementar(self, jugador):  # Jugador puede ser 1 o 2
         # if jugador == 1:
@@ -143,12 +145,33 @@ class Marcador(pygame.Rect):
         if self.puntos[jugador - 1] == 9:
             return f"{self.puntos[jugador-1]}"
 
-    def pintame(self, pantalla, texto, x, y):
-        self.fuente_marcador = pygame.font.SysFont("Arial", TAM_LETRA_MARCADOR)
-        self.superficie = self.fuente_marcador.render(texto, True, COLOR_OBJETOS)
-        self.rectangulo = self.superficie.get_rect()
-        self.rectangulo.center = (x, y)
-        pantalla.blit(self.superficie, self.rectangulo)
+    def pintame(self, pantalla):
+        # # Pinta el marcador del jugador 1 (en el lado izq)
+        # puntuacion = str(self.puntos[0])
+        # texto = self.tipografia.render(puntuacion, True, COLOR_OBJETOS)
+        # tam_img_text = texto.get_width()
+        # pos_x = 1 / 4 *ANCHO - tam_img_text / 2
+        # pos_y = POS_Y_MARCADORES
+        # pantalla.blit(texto, (pos_x, pos_y))
+
+        # # Pinta el marcador del jugador 2 (en el lado der)
+
+        # puntuacion = str(self.puntos[1])
+        # texto = self.tipografia.render(puntuacion, True, COLOR_OBJETOS)
+        # tam_img_text = texto.get_width()
+        # pos_x = 3 / 4 * ANCHO - tam_img_text / 2
+        # pos_y = POS_Y_MARCADORES
+        # pantalla.blit(texto, (pos_x, pos_y))
+
+        i = 1
+        for punto in self.puntos:
+            puntuacion = str(punto)
+            texto = self.tipografia.render(puntuacion, True, COLOR_OBJETOS)
+            tam_img_text = texto.get_width()
+            pos_x = i / 4 * ANCHO - tam_img_text / 2
+            pos_y = POS_Y_MARCADORES
+            pantalla.blit(texto, (pos_x, pos_y))
+            i += 2
 
 
 class Pong:
@@ -164,8 +187,6 @@ class Pong:
         self.jugador1 = Jugador(MARGEN_X, pos_y)
         self.jugador2 = Jugador(ANCHO - MARGEN_X - ANCHO_PALA, pos_y)
         self.marcador = Marcador()
-        self.marcador_jugador1 = Marcador()
-        self.marcador_jugador2 = Marcador()
 
     def jugar(self):  # Contiene el bucle principal
         exit = False
@@ -197,9 +218,9 @@ class Pong:
 
             if hay_punto > 0:
                 self.marcador.incrementar(hay_punto)
-                hay_ganador = self.marcador.comprobar_ganador()
+                # hay_ganador = self.marcador.comprobar_ganador()
 
-            self.marcador.pintame(self.pantalla)
+            self.marcador.pintame(self.screen)
 
             # Bloque 3: Mostrar los cambios en la pantalla
             pygame.display.flip()
