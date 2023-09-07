@@ -4,6 +4,7 @@ import pygame
 ANCHO = 1080
 ALTO = 720
 FPS = 60
+TAM_LETRA = 80
 
 COLOR_OBJETOS = (255, 255, 255)
 COLOR_FONDO = (100, 100, 100)
@@ -191,6 +192,7 @@ class Pong:
         self.title = pygame.display.set_caption("Pong")
         self.icon_imagen = pygame.image.load("icono.png")
         self.logo = pygame.display.set_icon(self.icon_imagen)
+        self.tipografia = pygame.font.SysFont("Arial", TAM_LETRA)
         pos_y = (ALTO - ALTO_PALA) / 2
         self.pelota = Pelota()
         self.jugador1 = Jugador(MARGEN_X, pos_y)
@@ -218,10 +220,14 @@ class Pong:
 
             hay_ganador = self.marcador.comprobar_ganador()
             if hay_ganador > 0:
-                pass
-            # 1- Parar la partida. La pelota se queda quieta (o no vuelve a salir)
-            # 2- (Opcional) Impedir el movimiento de los jugadores
-            # 3- Pintar en la pantalla quien es el ganador
+                # 1- Parar la partida. La pelota se queda quieta (o no vuelve a salir)
+                # 2- (Opcional) Impedir el movimiento de los jugadores
+                # 3- Pintar en la pantalla quien es el ganador
+                mensaje = f"Ha ganado el jugador {hay_ganador}"
+                text_img = self.tipografia.render(mensaje, False, COLOR_OBJETOS)
+                x = ANCHO / 2 - text_img.get_width() / 2
+                y = ALTO / 2 - text_img.get_height() / 2
+                self.screen.blit(text_img, (x, y))
             # 4- Preguntar si queremos jugar de nuevo
             else:
                 # Doy movimiento al jugadoor
