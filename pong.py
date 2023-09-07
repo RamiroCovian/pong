@@ -118,19 +118,32 @@ class Pelota(pygame.Rect):
 class Marcador(pygame.Rect):
     """
     Necesita:
-        - Guardar la puntuacion del jugador1
+        - Guardar la puntuacion del jugador 1
         - Guardar la puntuacion del jugador 2
         - Metodo para poner a cero
         - Metodo para mostrarse en pantalla
     """
 
     def __init__(self):
-        pass
+        self.reset()
 
-    def reiniciar_marcador(self):
-        pass
+    def incrementar(self, jugador):  # Jugador puede ser 1 o 2
+        # if jugador == 1:
+        #         self.puntuacion1 += 1
+        # if jugador == 2:
+        #         self.puntuacion2 += 1
+        self.puntos[jugador - 1] += 1
 
-    def pintarse(self, pantalla, texto, x, y):
+    def reset(self):
+        # self.puntuacion1 = 0
+        # self.puntuacion2 = 0
+        self.puntos = [0, 0]
+
+    def comprobar_ganador(self, jugador):
+        if self.puntos[jugador - 1] == 9:
+            return f"{self.puntos[jugador-1]}"
+
+    def pintame(self, pantalla, texto, x, y):
         self.fuente_marcador = pygame.font.SysFont("Arial", TAM_LETRA_MARCADOR)
         self.superficie = self.fuente_marcador.render(texto, True, COLOR_OBJETOS)
         self.rectangulo = self.superficie.get_rect()
@@ -150,13 +163,12 @@ class Pong:
         self.pelota = Pelota()
         self.jugador1 = Jugador(MARGEN_X, pos_y)
         self.jugador2 = Jugador(ANCHO - MARGEN_X - ANCHO_PALA, pos_y)
+        self.marcador = Marcador()
         self.marcador_jugador1 = Marcador()
         self.marcador_jugador2 = Marcador()
 
     def jugar(self):  # Contiene el bucle principal
         exit = False
-        puntaje_jugador1 = 0
-        puntaje_jugador2 = 0
 
         # Bloque 1: Captura de eventos
         while not exit:
@@ -178,37 +190,22 @@ class Pong:
             self.jugador2.pintame(self.screen)
 
             self.pintar_pelota()
-            puntaje_jugador1, puntaje_jugador2 = self.sumar_puntos(
-                puntaje_jugador1, puntaje_jugador2
-            )
+            # puntaje_jugador1, puntaje_jugador2 = self.sumar_puntos(
+            #     puntaje_jugador1, puntaje_jugador2
+            # )
+            hay_punto = self.pelota.comprobar_punto()  # Devuelve 0, 1, 2
 
-            self.marcador_jugador1.pintarse(
-                self.screen, str(puntaje_jugador1), POS_X_MARCADOR1, POS_Y_MARCADORES
-            )
-            self.marcador_jugador2.pintarse(
-                self.screen, str(puntaje_jugador2), POS_X_MARCADOR2, POS_Y_MARCADORES
-            )
+            if hay_punto > 0:
+                self.marcador.incrementar(hay_punto)
+                hay_ganador = self.marcador.comprobar_ganador()
+
+            self.marcador.pintame(self.pantalla)
 
             # Bloque 3: Mostrar los cambios en la pantalla
             pygame.display.flip()
             self.reloj.tick(FPS)
 
         pygame.quit()
-
-    def sumar_puntos(self, puntaje_jugador1, puntaje_jugador2):
-        hay_punto = self.pelota.comprobar_punto()
-
-        if hay_punto == 1:
-            if puntaje_jugador1 != 8:
-                puntaje_jugador1 += 1
-            else:
-                puntaje_jugador1 = "El ganador es Jugador 1"
-        if hay_punto == 2:
-            if puntaje_jugador2 != 8:
-                puntaje_jugador2 += 1
-            else:
-                puntaje_jugador2 = "El ganador es Jugador 2"
-        return puntaje_jugador1, puntaje_jugador2
 
     def comprobar_teclas(self):
         estado_teclas = pygame.key.get_pressed()
