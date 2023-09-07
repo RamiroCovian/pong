@@ -23,6 +23,7 @@ TAM_LETRA_MARCADOR = 70
 POS_X_MARCADOR1 = ANCHO / 4
 POS_X_MARCADOR2 = ANCHO - (ANCHO / 4)
 POS_Y_MARCADORES = ALTO / 4
+MAX_PUNTUACION = 2
 
 
 class Jugador(pygame.Rect):
@@ -141,9 +142,17 @@ class Marcador(pygame.Rect):
         # self.puntuacion2 = 0
         self.puntos = [0, 0]
 
-    def comprobar_ganador(self, jugador):
-        if self.puntos[jugador - 1] == 9:
-            return f"{self.puntos[jugador-1]}"
+    def comprobar_ganador(self):
+        # if self.puntos[0] == MAX_PUNTUACION:
+        #     return 1
+        # elif self.puntos[1] == MAX_PUNTUACION:
+        #     return 2
+        # return 0
+
+        for p in range(len(self.puntos)):
+            if self.puntos[p] == MAX_PUNTUACION:
+                return p + 1
+        return 0
 
     def pintame(self, pantalla):
         # # Pinta el marcador del jugador 1 (en el lado izq)
@@ -199,9 +208,6 @@ class Pong:
                 ):  # QUIT es una constante de pygame
                     exit = True
 
-            # Doy movimiento al jugadoor
-            self.comprobar_teclas()
-
             # Bloque 2: Renderizar nuestro objeto
             # pygame.draw.rect(self.screen, COLOR_FONDO, ((0, 0), (ANCHO, ALTO)))
             self.screen.fill(COLOR_FONDO)
@@ -210,15 +216,21 @@ class Pong:
             self.jugador1.pintame(self.screen)
             self.jugador2.pintame(self.screen)
 
-            self.pintar_pelota()
-            # puntaje_jugador1, puntaje_jugador2 = self.sumar_puntos(
-            #     puntaje_jugador1, puntaje_jugador2
-            # )
-            hay_punto = self.pelota.comprobar_punto()  # Devuelve 0, 1, 2
+            hay_ganador = self.marcador.comprobar_ganador()
+            if hay_ganador > 0:
+                pass
+            # 1- Parar la partida. La pelota se queda quieta (o no vuelve a salir)
+            # 2- (Opcional) Impedir el movimiento de los jugadores
+            # 3- Pintar en la pantalla quien es el ganador
+            # 4- Preguntar si queremos jugar de nuevo
+            else:
+                # Doy movimiento al jugadoor
+                self.comprobar_teclas()
+                self.pintar_pelota()
+                hay_punto = self.pelota.comprobar_punto()  # Devuelve 0, 1, 2
 
-            if hay_punto > 0:
-                self.marcador.incrementar(hay_punto)
-                # hay_ganador = self.marcador.comprobar_ganador()
+                if hay_punto > 0:
+                    self.marcador.incrementar(hay_punto)
 
             self.marcador.pintame(self.screen)
 
