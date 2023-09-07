@@ -24,7 +24,7 @@ TAM_LETRA_MARCADOR = 70
 POS_X_MARCADOR1 = ANCHO / 4
 POS_X_MARCADOR2 = ANCHO - (ANCHO / 4)
 POS_Y_MARCADORES = ALTO / 4
-MAX_PUNTUACION = 2
+MAX_PUNTUACION = 9
 
 
 class Jugador(pygame.Rect):
@@ -223,8 +223,8 @@ class Pong:
                 # 1- Parar la partida. La pelota se queda quieta (o no vuelve a salir)
                 # 2- (Opcional) Impedir el movimiento de los jugadores
                 # 3- Pintar en la pantalla quien es el ganador
-                self.finalizar_partida(hay_ganador)
-            # 4- Preguntar si queremos jugar de nuevo
+                exit = self.finalizar_partida(hay_ganador)
+                # 4- Preguntar si queremos jugar de nuevo
             else:
                 # Doy movimiento al jugadoor
                 self.comprobar_teclas()
@@ -246,8 +246,23 @@ class Pong:
         mensaje = f"Ha ganado el jugador {hay_ganador}"
         text_img = self.tipografia.render(mensaje, False, COLOR_OBJETOS)
         x = ANCHO / 2 - text_img.get_width() / 2
-        y = ALTO / 2 - text_img.get_height() / 2
+        y = ALTO / 2 - text_img.get_height()
         self.screen.blit(text_img, (x, y))
+
+        mensaje = "Jugamos otra? (s/n)"
+        text_img = self.tipografia.render(mensaje, False, COLOR_OBJETOS)
+        x = ANCHO / 2 - text_img.get_width() / 2
+        y = ALTO / 2 + text_img.get_height()
+        self.screen.blit(text_img, (x, y))
+
+        estado_teclas = pygame.key.get_pressed()
+        if estado_teclas[pygame.K_s]:
+            self.marcador.reset()
+            print("Juguemos otra")
+            return False
+        if estado_teclas[pygame.K_n]:
+            print("No quiero jugar mas")
+            return True
 
     def comprobar_teclas(self):
         estado_teclas = pygame.key.get_pressed()
