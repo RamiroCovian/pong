@@ -208,6 +208,7 @@ class Pong:
                 if event.type == pygame.QUIT or (
                     event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE
                 ):  # QUIT es una constante de pygame
+                    print(event.type, "POR EL FOR PRINCIPIO")
                     exit = True
 
             # Bloque 2: Renderizar nuestro objeto
@@ -223,8 +224,8 @@ class Pong:
                 # 1- Parar la partida. La pelota se queda quieta (o no vuelve a salir)
                 # 2- (Opcional) Impedir el movimiento de los jugadores
                 # 3- Pintar en la pantalla quien es el ganador
-                exit = self.finalizar_partida(hay_ganador)
                 # 4- Preguntar si queremos jugar de nuevo
+                exit = self.finalizar_partida(hay_ganador)
             else:
                 # Doy movimiento al jugadoor
                 self.comprobar_teclas()
@@ -256,11 +257,12 @@ class Pong:
         self.screen.blit(text_img, (x, y))
 
         estado_teclas = pygame.key.get_pressed()
+        eventos = pygame.event.get()
         if estado_teclas[pygame.K_s]:
             self.marcador.reset()
             print("Juguemos otra")
             return False
-        if estado_teclas[pygame.K_n]:
+        elif estado_teclas[pygame.K_n] or estado_teclas[pygame.K_ESCAPE]:
             print("No quiero jugar mas")
             return True
 
