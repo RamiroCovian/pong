@@ -34,6 +34,12 @@ class Jugador(pygame.Rect):
     def pintame(self, pantalla):
         pygame.draw.rect(pantalla, COLOR_OBJETOS, self)
 
+    def reset(self):
+        if self.y > ALTO / 2:
+            self.y -= VEL_JUGADOR
+        elif self.y < ALTO / 2:
+            self.y += VEL_JUGADOR
+
     def mover(self, direccion):
         """
         Que necesito para que un jugador se mueva:
@@ -208,7 +214,6 @@ class Pong:
                 if event.type == pygame.QUIT or (
                     event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE
                 ):  # QUIT es una constante de pygame
-                    print(event.type, "POR EL FOR PRINCIPIO")
                     exit = True
 
             # Bloque 2: Renderizar nuestro objeto
@@ -226,6 +231,8 @@ class Pong:
                 # 3- Pintar en la pantalla quien es el ganador
                 # 4- Preguntar si queremos jugar de nuevo
                 exit = self.finalizar_partida(hay_ganador)
+                self.jugador1.reset()
+                self.jugador2.reset()
             else:
                 # Doy movimiento al jugadoor
                 self.comprobar_teclas()
@@ -257,7 +264,6 @@ class Pong:
         self.screen.blit(text_img, (x, y))
 
         estado_teclas = pygame.key.get_pressed()
-        eventos = pygame.event.get()
         if estado_teclas[pygame.K_s]:
             self.marcador.reset()
             print("Juguemos otra")
