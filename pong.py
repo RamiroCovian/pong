@@ -35,9 +35,10 @@ class Jugador(pygame.Rect):
         pygame.draw.rect(pantalla, COLOR_OBJETOS, self)
 
     def reset(self):
-        if self.y > ALTO / 2:
-            self.y -= VEL_JUGADOR
-        elif self.y < ALTO / 2:
+        # No esta en la mitad, revisar
+        if self.y > (ALTO / 2) - (ALTO_PALA / 2):
+            self.y = self.y - VEL_JUGADOR
+        elif self.y < (ALTO / 2) - (ALTO_PALA / 2):
             self.y += VEL_JUGADOR
 
     def mover(self, direccion):
