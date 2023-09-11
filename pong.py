@@ -24,7 +24,7 @@ TAM_LETRA_MARCADOR = 70
 POS_X_MARCADOR1 = ANCHO / 4
 POS_X_MARCADOR2 = ANCHO - (ANCHO / 4)
 POS_Y_MARCADORES = ALTO / 4
-MAX_PUNTUACION = 9
+MAX_PUNTUACION = 1
 
 
 class Jugador(pygame.Rect):
@@ -209,14 +209,7 @@ class Pong:
     def jugar(self):  # Contiene el bucle principal
         exit = False
 
-        # Bloque 1: Captura de eventos
         while not exit:
-            for event in pygame.event.get():  # Lista de eventos con objeto
-                if event.type == pygame.QUIT or (
-                    event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE
-                ):  # QUIT es una constante de pygame
-                    exit = True
-
             # Bloque 2: Renderizar nuestro objeto
             # pygame.draw.rect(self.screen, COLOR_FONDO, ((0, 0), (ANCHO, ALTO)))
             self.screen.fill(COLOR_FONDO)
@@ -249,6 +242,12 @@ class Pong:
             pygame.display.flip()
             self.reloj.tick(FPS)
 
+            # Bloque 1: Captura de eventos
+            for event in pygame.event.get():  # Lista de eventos con objeto
+                if event.type == pygame.QUIT or (
+                    event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE
+                ):  # QUIT es una constante de pygame
+                    exit = True
         pygame.quit()
 
     def finalizar_partida(self, hay_ganador):
@@ -269,7 +268,7 @@ class Pong:
             self.marcador.reset()
             print("Juguemos otra")
             return False
-        elif estado_teclas[pygame.K_n] or estado_teclas[pygame.K_ESCAPE]:
+        elif estado_teclas[pygame.K_n]:
             print("No quiero jugar mas")
             return True
 
